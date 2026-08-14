@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Drumstick } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -67,11 +68,25 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center p-4">
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-6 p-4">
+      <div className="flex flex-col items-center gap-3">
+        <div className="bg-primary shadow-primary/30 flex size-16 items-center justify-center rounded-2xl shadow-lg">
+          <Drumstick className="text-primary-foreground size-9" />
+        </div>
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold">Fran Li</h1>
+          <p className="text-muted-foreground text-sm">
+            Tu negocio de pollo, simple y ordenado.
+          </p>
+        </div>
+      </div>
+
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Fran Li</CardTitle>
-          <CardDescription>Ingresá para gestionar tu negocio.</CardDescription>
+          <CardTitle className="text-xl">Ingresar</CardTitle>
+          <CardDescription>
+            Entrá con tu email y contraseña para continuar.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

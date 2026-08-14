@@ -2,6 +2,7 @@ export type PaymentMethod = 'cash' | 'transfer'
 
 export type Product = {
   id: string
+  created_by: string
   name: string
   price_per_kg: number | null
   active: boolean
@@ -83,8 +84,8 @@ export type Database = {
     Tables: {
       franli_products: {
         Row: Product
-        Insert: Omit<Product, 'id' | 'created_at'>
-        Update: Partial<Omit<Product, 'id' | 'created_at'>>
+        Insert: Omit<Product, 'id' | 'created_by' | 'created_at'>
+        Update: Partial<Omit<Product, 'id' | 'created_by' | 'created_at'>>
         Relationships: []
       }
       franli_product_prices: {

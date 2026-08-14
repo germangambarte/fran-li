@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Drumstick, Plus } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { EmptyState } from '@/components/layout/EmptyState'
 import { formatKilos, formatMoney } from '@/lib/format'
 import { useProducts, useSetProductActive } from '../hooks'
 import type { ProductWithPrices } from '../types'
@@ -48,9 +49,11 @@ export function ProductListPage() {
       )}
 
       {products && products.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          Todavía no hay productos. Tocá “Nuevo” para agregar el primero.
-        </p>
+        <EmptyState
+          icon={Drumstick}
+          title="Sin productos todavía"
+          description="Tocá el botón «Nuevo» para cargar tu primer producto."
+        />
       )}
 
       <ul className="flex flex-col gap-2">

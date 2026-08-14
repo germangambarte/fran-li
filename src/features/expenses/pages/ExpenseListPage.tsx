@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Plus, Receipt } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { EmptyState } from '@/components/layout/EmptyState'
 import { formatMoney, toDateInput } from '@/lib/format'
 import { useExpenses } from '../hooks'
 
@@ -97,11 +98,19 @@ export function ExpenseListPage() {
       )}
 
       {!isPending && !isError && filtered.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          {expenses && expenses.length === 0
-            ? 'Todavía no hay gastos registrados. Tocá “Nuevo” para cargar el primero.'
-            : 'No hay gastos en ese rango de fechas.'}
-        </p>
+        expenses && expenses.length === 0 ? (
+          <EmptyState
+            icon={Receipt}
+            title="Sin gastos todavía"
+            description="Tocá el botón «Nuevo» para registrar el primer gasto."
+          />
+        ) : (
+          <EmptyState
+            icon={Receipt}
+            title="Sin gastos en ese período"
+            description="Probá elegir otro rango de fechas."
+          />
+        )
       )}
 
       <ul className="flex flex-col gap-2">

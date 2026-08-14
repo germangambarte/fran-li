@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { TrendingDown, TrendingUp } from 'lucide-react'
+import { Receipt, ShoppingCart, TrendingDown, TrendingUp } from 'lucide-react'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { formatMoney, toDateInput } from '@/lib/format'
@@ -89,14 +89,23 @@ export function DashboardPage() {
       {!isPending && !isError && (
         <>
           <Card>
-            <CardContent className="flex flex-col gap-1">
+            <CardContent className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">Ganancia</span>
-                {profitPositive ? (
-                  <TrendingUp className="text-emerald-600 size-5" />
-                ) : (
-                  <TrendingDown className="text-destructive size-5" />
-                )}
+                <div
+                  className={cn(
+                    'flex size-8 items-center justify-center rounded-full',
+                    profitPositive
+                      ? 'bg-emerald-600/10'
+                      : 'bg-destructive/10',
+                  )}
+                >
+                  {profitPositive ? (
+                    <TrendingUp className="text-emerald-600 size-4" />
+                  ) : (
+                    <TrendingDown className="text-destructive size-4" />
+                  )}
+                </div>
               </div>
               <span
                 className={cn(
@@ -115,8 +124,13 @@ export function DashboardPage() {
 
           <div className="grid grid-cols-2 gap-2">
             <Card>
-              <CardContent className="flex flex-col gap-1">
-                <span className="text-muted-foreground text-sm">Ventas</span>
+              <CardContent className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm">Ventas</span>
+                  <div className="bg-primary/10 flex size-8 items-center justify-center rounded-full">
+                    <ShoppingCart className="text-primary size-4" />
+                  </div>
+                </div>
                 <span className="text-2xl font-semibold tabular-nums">
                   {formatMoney(active.totals.sales)}
                 </span>
@@ -126,8 +140,13 @@ export function DashboardPage() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="flex flex-col gap-1">
-                <span className="text-muted-foreground text-sm">Gastos</span>
+              <CardContent className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm">Gastos</span>
+                  <div className="bg-destructive/10 flex size-8 items-center justify-center rounded-full">
+                    <Receipt className="text-destructive size-4" />
+                  </div>
+                </div>
                 <span className="text-destructive text-2xl font-semibold tabular-nums">
                   -{formatMoney(active.totals.expenses)}
                 </span>

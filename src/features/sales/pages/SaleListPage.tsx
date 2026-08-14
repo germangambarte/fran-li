@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Plus, ShoppingCart } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/layout/EmptyState'
 import { formatMoney } from '@/lib/format'
 import type { PaymentMethod } from '@/types/database'
 import { useSales } from '../hooks'
@@ -43,10 +44,11 @@ export function SaleListPage() {
       )}
 
       {sales && sales.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          Todavía no hay ventas registradas. Tocá “Nueva” para cargar la
-          primera.
-        </p>
+        <EmptyState
+          icon={ShoppingCart}
+          title="Sin ventas todavía"
+          description="Tocá el botón «Nueva» para registrar la primera venta."
+        />
       )}
 
       <ul className="flex flex-col gap-2">

@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Plus, Wallet } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { EmptyState } from '@/components/layout/EmptyState'
 import { formatMoney } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { useExpenses } from '@/features/expenses/hooks'
@@ -73,10 +74,27 @@ export function CashListPage() {
       {!isPending && !isError && (
         <>
           <Card>
-            <CardContent className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-sm">
-                Dinero disponible
-              </span>
+            <CardContent className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground text-sm">
+                  Dinero disponible
+                </span>
+                <div
+                  className={cn(
+                    'flex size-8 items-center justify-center rounded-full',
+                    availablePositive
+                      ? 'bg-emerald-600/10'
+                      : 'bg-destructive/10',
+                  )}
+                >
+                  <Wallet
+                    className={cn(
+                      'size-4',
+                      availablePositive ? 'text-emerald-600' : 'text-destructive',
+                    )}
+                  />
+                </div>
+              </div>
               <span
                 className={cn(
                   'text-3xl font-bold tabular-nums',
@@ -122,10 +140,11 @@ export function CashListPage() {
       )}
 
       {!isPending && !isError && movements?.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          Todavía no hay retiros ni ajustes. Tocá “Nuevo” para registrar el
-          primero.
-        </p>
+        <EmptyState
+          icon={Wallet}
+          title="Sin movimientos de caja"
+          description="Tocá el botón «Nuevo» para registrar un retiro o un ajuste."
+        />
       )}
 
       <ul className="flex flex-col gap-2">
