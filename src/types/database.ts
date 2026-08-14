@@ -20,6 +20,7 @@ export type Sale = {
   created_by: string
   payment_method: PaymentMethod
   total: number
+  note: string | null
   created_at: string
 }
 
@@ -28,6 +29,8 @@ export type SaleItem = {
   sale_id: string
   product_id: string | null
   product_name: string
+  price_min_kg: number | null
+  pack_price: number | null
   unit_price: number
   quantity: number
   subtotal: number
@@ -39,6 +42,7 @@ export type Expense = {
   description: string
   amount: number
   payment_method: PaymentMethod
+  note: string | null
   created_at: string
 }
 
@@ -84,8 +88,8 @@ export type Database = {
       }
       franli_sales: {
         Row: Sale
-        Insert: Omit<Sale, 'id' | 'created_by' | 'created_at'>
-        Update: Partial<Omit<Sale, 'id' | 'created_by' | 'created_at'>>
+        Insert: Omit<Sale, 'id' | 'created_by'>
+        Update: Partial<Omit<Sale, 'id' | 'created_by'>>
         Relationships: []
       }
       franli_sale_items: {
@@ -96,8 +100,8 @@ export type Database = {
       }
       franli_expenses: {
         Row: Expense
-        Insert: Omit<Expense, 'id' | 'created_by' | 'created_at'>
-        Update: Partial<Omit<Expense, 'id' | 'created_by' | 'created_at'>>
+        Insert: Omit<Expense, 'id' | 'created_by'>
+        Update: Partial<Omit<Expense, 'id' | 'created_by'>>
         Relationships: []
       }
       franli_cash_movements: {

@@ -22,3 +22,27 @@ export function parseDecimal(value: string): number | null {
   const parsed = Number(normalized)
   return Number.isFinite(parsed) ? parsed : null
 }
+
+export function round2(value: number): number {
+  return Math.round(value * 100) / 100
+}
+
+function pad(value: number): string {
+  return String(value).padStart(2, '0')
+}
+
+export function toLocalDateTimeInput(iso: string): string {
+  const date = new Date(iso)
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+export function nowLocalDateTimeInput(): string {
+  return toLocalDateTimeInput(new Date().toISOString())
+}
+
+export function toDateInput(iso: string): string {
+  const date = new Date(iso)
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
