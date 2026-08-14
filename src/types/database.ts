@@ -60,6 +60,7 @@ export type CashMovement = {
   type: CashMovementType
   amount: number
   description: string | null
+  note: string | null
   sale_id: string | null
   expense_id: string | null
   created_at: string
@@ -69,6 +70,12 @@ export type DailySummary = {
   day: string
   sales_count: number
   total: number
+}
+
+export type DailyBalance = {
+  day: string
+  sales: number
+  expenses: number
 }
 
 export type Database = {
@@ -106,8 +113,8 @@ export type Database = {
       }
       franli_cash_movements: {
         Row: CashMovement
-        Insert: Omit<CashMovement, 'id' | 'created_by' | 'created_at'>
-        Update: Partial<Omit<CashMovement, 'id' | 'created_by' | 'created_at'>>
+        Insert: Omit<CashMovement, 'id' | 'created_by'>
+        Update: Partial<Omit<CashMovement, 'id' | 'created_by'>>
         Relationships: []
       }
     }
@@ -117,7 +124,12 @@ export type Database = {
         Relationships: []
       }
     }
-    Functions: Record<never, never>
+    Functions: {
+      franli_daily_balance: {
+        Args: { tz: string }
+        Returns: DailyBalance[]
+      }
+    }
     Enums: {
       payment_method: PaymentMethod
       cash_movement_type: CashMovementType

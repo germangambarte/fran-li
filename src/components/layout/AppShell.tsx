@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { NavLink, Outlet } from 'react-router-dom'
-import { BarChart3, Drumstick, LogOut, Receipt, ShoppingCart } from 'lucide-react'
+import { BarChart3, Drumstick, LogOut, Receipt, ShoppingCart, Wallet } from 'lucide-react'
 
 import { useAuth } from '@/features/auth/AuthContext'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,10 @@ function BottomNav() {
         <NavLink to="/" end className={linkClass}>
           <BarChart3 className="size-5" />
           Balance
+        </NavLink>
+        <NavLink to="/caja" className={linkClass}>
+          <Wallet className="size-5" />
+          Caja
         </NavLink>
         <NavLink to="/ventas" className={linkClass}>
           <ShoppingCart className="size-5" />
@@ -54,7 +58,7 @@ export function AppShell() {
     <div className="min-h-dvh bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-12 w-full max-w-2xl items-center justify-between gap-2 px-4">
-          <span className="font-semibold">Fran Li</span>
+          <span className="font-semibold">🐔 Fran Li</span>
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground hidden max-w-48 truncate text-sm sm:block">
               {user?.email}

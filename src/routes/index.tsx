@@ -3,6 +3,8 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { RequireAuth } from '@/features/auth/RequireAuth'
+import { CashFormPage } from '@/features/cash/pages/CashFormPage'
+import { CashListPage } from '@/features/cash/pages/CashListPage'
 import { DashboardPage } from '@/features/dashboard/pages/DashboardPage'
 import { ExpenseFormPage } from '@/features/expenses/pages/ExpenseFormPage'
 import { ExpenseListPage } from '@/features/expenses/pages/ExpenseListPage'
@@ -20,6 +22,9 @@ export const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { index: true, element: <DashboardPage /> },
+          { path: '/caja', element: <CashListPage /> },
+          { path: '/caja/nuevo', element: <CashFormPage /> },
+          { path: '/caja/:movementId', element: <CashFormPage /> },
           { path: '/productos', element: <ProductListPage /> },
           { path: '/productos/nuevo', element: <ProductFormPage /> },
           { path: '/productos/:productId', element: <ProductFormPage /> },
