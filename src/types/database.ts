@@ -1,6 +1,6 @@
 export type PaymentMethod = 'cash' | 'transfer'
 
-export interface Product {
+export type Product = {
   id: string
   name: string
   price_per_kg: number | null
@@ -8,14 +8,14 @@ export interface Product {
   created_at: string
 }
 
-export interface ProductPrice {
+export type ProductPrice = {
   id: string
   product_id: string
   min_kg: number
   price: number
 }
 
-export interface Sale {
+export type Sale = {
   id: string
   created_by: string
   payment_method: PaymentMethod
@@ -23,7 +23,7 @@ export interface Sale {
   created_at: string
 }
 
-export interface SaleItem {
+export type SaleItem = {
   id: string
   sale_id: string
   product_id: string | null
@@ -33,58 +33,82 @@ export interface SaleItem {
   subtotal: number
 }
 
-export interface DailyClosing {
+export type Expense = {
   id: string
-  date: string
-  opening: number
-  observed: number | null
-  notes: string | null
-  closed_at: string | null
   created_by: string
+  description: string
+  amount: number
+  payment_method: PaymentMethod
+  created_at: string
 }
 
-export interface DailySummary {
+export type CashMovementType =
+  | 'opening'
+  | 'sale'
+  | 'expense'
+  | 'cash_in'
+  | 'cash_out'
+  | 'closing'
+
+export type CashMovement = {
+  id: string
+  created_by: string
+  type: CashMovementType
+  amount: number
+  description: string | null
+  sale_id: string | null
+  expense_id: string | null
+  created_at: string
+}
+
+export type DailySummary = {
   day: string
   sales_count: number
   total: number
 }
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      products: {
+      franli_products: {
         Row: Product
         Insert: Omit<Product, 'id' | 'created_at'>
         Update: Partial<Omit<Product, 'id' | 'created_at'>>
         Relationships: []
       }
-      product_prices: {
+      franli_product_prices: {
         Row: ProductPrice
-        Insert: Omit<ProductPrice, 'id'>
-        Update: Partial<Omit<ProductPrice, 'id'>>
+        Insert: Omit<ProductPrice, 'id' | 'created_at'>
+        Update: Partial<Omit<ProductPrice, 'id' | 'created_at'>>
         Relationships: []
       }
-      sales: {
+      franli_sales: {
         Row: Sale
         Insert: Omit<Sale, 'id' | 'created_by' | 'created_at'>
         Update: Partial<Omit<Sale, 'id' | 'created_by' | 'created_at'>>
         Relationships: []
       }
-      sale_items: {
+      franli_sale_items: {
         Row: SaleItem
         Insert: Omit<SaleItem, 'id'>
         Update: Partial<Omit<SaleItem, 'id'>>
         Relationships: []
       }
-      daily_closings: {
-        Row: DailyClosing
-        Insert: Omit<DailyClosing, 'id' | 'created_by'>
-        Update: Partial<Omit<DailyClosing, 'id' | 'created_by'>>
+      franli_expenses: {
+        Row: Expense
+        Insert: Omit<Expense, 'id' | 'created_by' | 'created_at'>
+        Update: Partial<Omit<Expense, 'id' | 'created_by' | 'created_at'>>
+        Relationships: []
+      }
+      franli_cash_movements: {
+        Row: CashMovement
+        Insert: Omit<CashMovement, 'id' | 'created_by' | 'created_at'>
+        Update: Partial<Omit<CashMovement, 'id' | 'created_by' | 'created_at'>>
         Relationships: []
       }
     }
     Views: {
-      daily_summary: {
+      franli_daily_summary: {
         Row: DailySummary
         Relationships: []
       }
@@ -92,6 +116,7 @@ export interface Database {
     Functions: Record<never, never>
     Enums: {
       payment_method: PaymentMethod
+      cash_movement_type: CashMovementType
     }
     CompositeTypes: Record<never, never>
   }
