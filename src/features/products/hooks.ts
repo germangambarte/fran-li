@@ -1,13 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { queryKeys } from '@/lib/queryKeys'
 import { listProducts, saveProduct, setProductActive } from './api'
 import type { ProductWithPrices } from './types'
 
-const productsKey = ['products'] as const
-
 export function useProducts() {
   return useQuery({
-    queryKey: productsKey,
+    queryKey: queryKeys.products,
     queryFn: listProducts,
   })
 }
@@ -16,7 +15,8 @@ export function useSaveProduct() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: saveProduct,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: productsKey }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.products }),
   })
 }
 
@@ -26,11 +26,13 @@ export function useSetProductActive() {
     mutationFn: ({ id, active }: { id: string; active: boolean }) =>
       setProductActive(id, active),
     onMutate: async ({ id, active }) => {
-      await queryClient.cancelQueries({ queryKey: productsKey })
-      const previous = queryClient.getQueryData<ProductWithPrices[]>(productsKey)
+      await queryClient.cancelQueries({ queryKey: queryKeys.products })
+      const previous = queryClient.getQueryData<ProductWithPrices[]>(
+        queryKeys.products,
+      )
       if (previous) {
         queryClient.setQueryData(
-          productsKey,
+          queryKeys.products,
           previous.map((product) =>
             product.id === id ? { ...product, active } : product,
           ),
@@ -40,9 +42,10 @@ export function useSetProductActive() {
     },
     onError: (_error, _variables, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(productsKey, context.previous)
+        queryClient.setQueryData(queryKeys.products, context.previous)
       }
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: productsKey }),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.products }),
   })
 }
