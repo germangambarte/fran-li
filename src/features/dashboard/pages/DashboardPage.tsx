@@ -2,11 +2,23 @@ import { useMemo, useState } from 'react'
 import { TrendingDown, TrendingUp } from 'lucide-react'
 
 import { Card, CardContent } from '@/components/ui/card'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, toDateInput } from '@/lib/format'
+import { cn } from '@/lib/utils'
 import { useExpenses } from '@/features/expenses/hooks'
 import { useSales } from '@/features/sales/hooks'
+import { useDailyHistory } from '../history'
 import { buildPeriods, computeTotals, type PeriodId } from '../periods'
-import { cn } from '@/lib/utils'
+
+const dayFormatter = new Intl.DateTimeFormat('es-AR', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+})
+
+function dayLabel(day: string, isToday: boolean): string {
+  if (isToday) return 'Hoy'
+  return dayFormatter.format(new Date(`${day}T12:00:00`))
+}
 
 export function DashboardPage() {
   const {
@@ -19,6 +31,12 @@ export function DashboardPage() {
     isPending: expensesPending,
     isError: expensesError,
   } = useExpenses()
+  const {
+    data: history,
+    isPending: historyPending,
+    isError: historyError,
+    error: historyErrorMessage,
+  } = useDailyHistory()
   const [periodId, setPeriodId] = useState<PeriodId>('today')
 
   const summaries = useMemo(() => {
@@ -34,6 +52,7 @@ export function DashboardPage() {
   const isPending = salesPending || expensesPending
   const isError = salesError || expensesError
   const profitPositive = active.totals.profit >= 0
+  const today = toDateInput(new Date().toISOString())
 
   return (
     <>
@@ -120,6 +139,67 @@ export function DashboardPage() {
           </div>
         </>
       )}
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-lg font-semibold">Últimos 30 días</h2>
+
+        {historyPending && (
+          <p className="text-muted-foreground text-sm">Cargando…</p>
+        )}
+
+        {historyError && (
+          <p className="text-destructive text-sm">
+            No se pudo cargar el historial.
+            {historyErrorMessage instanceof Error
+              ? ` ${historyErrorMessage.message}`
+              : ''}
+          </p>
+        )}
+
+        {!historyPending && !historyError && history && (
+          <>
+            <div className="grid grid-cols-[1fr_auto_auto] gap-3 px-3 text-xs text-muted-foreground">
+              <span>Fecha</span>
+              <span className="w-20 text-right">Vendido</span>
+              <span className="w-20 text-right">Ganancia</span>
+            </div>
+            <ul className="flex flex-col gap-1.5">
+              {history.map((row) => {
+                const emptyDay = row.sales === 0 && row.expenses === 0
+                const profitPositive = row.profit >= 0
+                return (
+                  <li key={row.day}>
+                    <div
+                      className={cn(
+                        'grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-lg border bg-card px-3 py-2',
+                        emptyDay && 'opacity-60',
+                      )}
+                    >
+                      <span className="text-sm font-medium">
+                        {dayLabel(row.day, row.day === today)}
+                      </span>
+                      <span className="w-20 text-right text-sm tabular-nums">
+                        {formatMoney(row.sales)}
+                      </span>
+                      <span
+                        className={cn(
+                          'w-20 text-right text-sm tabular-nums',
+                          profitPositive
+                            ? 'text-emerald-600'
+                            : 'text-destructive',
+                        )}
+                      >
+                        {profitPositive ? '' : '-'}
+                        {formatMoney(Math.abs(row.profit))}
+                      </span>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          </>
+        )}
+      </section>
     </>
   )
 }
